@@ -73,7 +73,7 @@ func TestBookData_Read(t *testing.T) {
 	data := NewBookData(gormDb)
 	rows := sqlmock.NewRows([]string{"book_id", "name_of_book", "name_of_publisher"}).
 		AddRow(testResult.BookId, testResult.NameOfBook, testResult.NameOfPublisher)
-	mock.ExpectQuery(constDb.ReadBookWithJoin).WillReturnRows(rows)
+	mock.ExpectQuery(constDb.Read).WillReturnRows(rows)
 	users, err := data.Read()
 	assert.NoError(err)
 	assert.NotEmpty(users)
@@ -103,12 +103,42 @@ func TestBookData_Update(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.Update).WithArgs(testBook.BookId, testBook.AuthorId, testBook.PublisherId, testBook.NameOfBook, testBook.YearOfPublication, testBook.BookVolume, testBook.Number).
+	mock.ExpectExec(constDb.Update).
+		WithArgs(testBook.NameOfBook, testBook.BookId).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
-	id, err := data.Add(testBook)
+	err := data.Update("name_of_book", testBook.BookId, testBook.NameOfBook)
 	assert.NoError(err)
-	assert.Equal(id, testBook.BookId)
+}
+
+func TestBookData_Delete(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	gormDb := NewGorm(db)
+	data := NewBookData(gormDb)
+	mock.ExpectBegin()
+	mock.ExpectExec(constDb.Delete).
+		WithArgs(testBook.BookId).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+	err := data.Delete(testBook.BookId)
+	assert.NoError(err)
+}
+
+func TestBookData_UpdateErr(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	gormDb := NewGorm(db)
+	data := NewBookData(gormDb)
+	mock.ExpectBegin()
+	mock.ExpectExec(constDb.Delete).
+		WithArgs(testBook.BookId).
+		WillReturnError(errors.New("something went wrong..."))
+	mock.ExpectCommit()
+	err := data.Delete(testBook.BookId)
+	assert.Error(err)
 }
 
 func TestBookData_ReadAllErr(t *testing.T) {
@@ -148,4 +178,19 @@ func TestBookData_AddErr(t *testing.T) {
 	id, err := data.Add(testBook)
 	assert.Error(err)
 	assert.Equal(id, -1)
+}
+
+func TestBookData_DeleteErr(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	gormDb := NewGorm(db)
+	data := NewBookData(gormDb)
+	mock.ExpectBegin()
+	mock.ExpectExec(constDb.Delete).
+		WithArgs(testBook.BookId).
+		WillReturnError(errors.New("something went wrong..."))
+	mock.ExpectCommit()
+	err := data.Delete(testBook.BookId)
+	assert.Error(err)
 }
