@@ -1,10 +1,10 @@
 package db
 
 import (
-	constDb "example.com/m/pkg/constDb"
 	"fmt"
-	"gorm.io/driver/postgres"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
 
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 

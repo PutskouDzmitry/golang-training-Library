@@ -3,13 +3,14 @@ package data
 import (
 	"database/sql"
 	"errors"
-	"example.com/m/pkg/constDb"
-	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/stretchr/testify/assert"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 	"testing"
+
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 )
 
 func NewMock() (*sql.DB, sqlmock.Sqlmock) {

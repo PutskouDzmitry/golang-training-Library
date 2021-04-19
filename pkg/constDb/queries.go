@@ -10,4 +10,4 @@ const (
 	SelectAllBooks = `SELECT * FROM "books"`
 	Update = `UPDATE "books" SET "name_of_book"=$1 WHERE book_id = $2`
 	Delete = `DELETE FROM "books" WHERE book_id = $1`
-	)
+)

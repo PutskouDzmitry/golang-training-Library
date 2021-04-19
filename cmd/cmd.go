@@ -1,10 +1,10 @@
 package main
 
 import (
-	"example.com/m/pkg/constDb"
-	"example.com/m/pkg/data"
-	"example.com/m/pkg/db"
 	"fmt"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
 	"log"
 	"os"
 )
@@ -39,50 +39,49 @@ func init() {
 	}
 }
 
-func main() {
+	func main() {
 	conn, err := db.GetConnection(host, port, user, dbname, password, sslmode)
 	if err != nil {
 		log.Fatalf("can't connect to database, error: %v", err)
 	}
 	bookDate := data.NewBookData(conn)
-	books, err := bookDate.ReadAll()
+	books, err := bookDate.Read()
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(books)
-	//newBook := data.Book{
-	//	BookId:            12,
-	//	AuthorId:          4,
-	//	PublisherId:       2,
-	//	NameOfBook:        "Lord of the Rings",
-	//	YearOfPublication: "2017-12-5",
-	//	BookVolume:        50,
-	//	Number:            10,
-	//}
-	//id, err := bookDate.Add(newBook)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//fmt.Println(id)
-	//books, err = bookDate.Read()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//fmt.Println(books)
-	//changeNumber := 123
-	//err = bookDate.Update("number", 2, changeNumber)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//books, err = bookDate.Read()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//fmt.Println(books)
-	//err = bookDate.Delete(11)
-	//books, err = bookDate.Read()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//fmt.Println(books)
+	newBook := data.Book{
+		BookId:            12,
+		AuthorId:          4,
+		PublisherId:       2,
+		NameOfBook:        "Lord of the Rings",
+		YearOfPublication: "2017-12-5",
+		BookVolume:        50,
+		Number:            10,
+	}
+	err = bookDate.Add(newBook)
+	if err != nil {
+		log.Fatal(err)
+	}
+	books, err = bookDate.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(books)
+	changeNumber := 123
+	err = bookDate.Update("number", 2, changeNumber)
+	if err != nil {
+		log.Fatal(err)
+	}
+	books, err = bookDate.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(books)
+	err = bookDate.Delete(11)
+	books, err = bookDate.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(books)
 }

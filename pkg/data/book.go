@@ -1,10 +1,11 @@
 package data
 
 import (
-	dbConst "example.com/m/pkg/constDb"
 	"fmt"
-	"gorm.io/gorm"
+	dbConst "github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 //Entity in database
@@ -16,6 +17,16 @@ type Book struct {
 	YearOfPublication string // year of publication of the book
 	BookVolume int // book volume
 	Number int // number of book
+}
+
+//ReadAll output all data with table books
+func (B BookData) ReadAll() ([]Book, error) {
+	var books []Book
+	result := B.db.Find(&books)
+	if result.Error != nil {
+		return nil, fmt.Errorf("can't read users from database, error: %w", result.Error)
+	}
+	return books, nil
 }
 
 //String output data in console
@@ -31,15 +42,6 @@ type BookData struct {
 //NewBookData it's imitation constructor
 func NewBookData(db *gorm.DB) *BookData {
 	return &BookData{db: db}
-}
-
-func (B BookData) ReadAll() ([]Book, error) {
-	var books []Book
-	result := B.db.Find(&books)
-	if result.Error != nil {
-		return nil, fmt.Errorf("can't read users from database, error: %w", result.Error)
-	}
-	return books, nil
 }
 
 //Read read data in db
