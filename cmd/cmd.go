@@ -1,10 +1,10 @@
 package main
 
 import (
-	"../pkg/constDb"
-	"../pkg/data"
-	"../pkg/db"
 	"fmt"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
 	"log"
 	"os"
 )

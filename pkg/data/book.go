@@ -1,8 +1,8 @@
 package data
 
 import (
-	dbConst "../constDb"
 	"fmt"
+	dbConst "github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
 	"strings"
 
 	"gorm.io/gorm"

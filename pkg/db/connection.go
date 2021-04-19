@@ -1,8 +1,8 @@
 package db
 
 import (
-	"../constDb"
 	"fmt"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
