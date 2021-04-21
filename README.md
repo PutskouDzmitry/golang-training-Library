@@ -12,7 +12,7 @@ Application for get books with such operations as in table below:
 | /books/{id}              | DELETE | delete book by the id              |                                                                                                                                                                                                                                  |
 
 ## Usage 
-1.  Server runs on 8080 port. To run it type:
+1. Run server on port `8080`
 	`go run cmd/main.go`
 2.  Open URL
 `http://localhost:8080/`
