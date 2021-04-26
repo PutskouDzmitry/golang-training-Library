@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
 	"log"
 	"os"
+
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
 )
 
 var (
@@ -20,26 +21,26 @@ var (
 
 func init() {
 	if host == "" {
-		host = constDb.Host
+		host = const_db.Host
 	}
 	if port == "" {
-		port = constDb.Port
+		port = const_db.Port
 	}
 	if user == "" {
-		user = constDb.User
+		user = const_db.User
 	}
 	if dbname == "" {
-		dbname = constDb.DbName
+		dbname = const_db.DbName
 	}
 	if password == "" {
-		password = constDb.Password
+		password = const_db.Password
 	}
 	if sslmode == "" {
-		sslmode = constDb.Sslmode
+		sslmode = const_db.Sslmode
 	}
 }
 
-	func main() {
+func main() {
 	conn, err := db.GetConnection(host, port, user, dbname, password, sslmode)
 	if err != nil {
 		log.Fatalf("can't connect to database, error: %v", err)
@@ -51,7 +52,7 @@ func init() {
 	}
 	fmt.Println(books)
 	newBook := data.Book{
-		BookId:            12,
+		BookId:            122,
 		AuthorId:          4,
 		PublisherId:       2,
 		NameOfBook:        "Lord of the Rings",
@@ -68,11 +69,6 @@ func init() {
 		log.Fatal(err)
 	}
 	fmt.Println(books)
-	changeNumber := 123
-	err = bookDate.Update("number", 2, changeNumber)
-	if err != nil {
-		log.Fatal(err)
-	}
 	books, err = bookDate.Read()
 	if err != nil {
 		log.Fatal(err)
