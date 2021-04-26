@@ -2,10 +2,10 @@ package data
 
 import (
 	"fmt"
-	dbConst "github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
+	"gorm.io/gorm"
 	"strings"
 
-	"gorm.io/gorm"
+	dbConst "github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 )
 
 //Entity in database
@@ -65,9 +65,10 @@ func (B BookData) Add(book Book) (int, error) {
 	return book.BookId, nil
 }
 
-//Update update data in db
-func (B BookData) Update(colume string, id int, value interface{}) error {
-	result := B.db.Table(dbConst.Books).Where(dbConst.BookId, id).Update(colume, value)
+
+//Update update number of books by the id
+func (B BookData) Update(id int, value int) error {
+	result := B.db.Table(dbConst.Books).Where(dbConst.BookId, id).Update("number", value)
 	if result.Error != nil {
 		return fmt.Errorf(dbConst.CantUpdateDataError, result.Error)
 	}

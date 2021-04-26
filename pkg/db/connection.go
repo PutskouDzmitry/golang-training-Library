@@ -2,10 +2,10 @@ package db
 
 import (
 	"fmt"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 )
 
 //GetConnection it's return a new connection in db
