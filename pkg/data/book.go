@@ -19,6 +19,16 @@ type Book struct {
 	Number            int    // number of book
 }
 
+//ReadAll output all data with table books
+func (B BookData) ReadAll() ([]Book, error) {
+	var books []Book
+	result := B.db.Find(&books)
+	if result.Error != nil {
+		return nil, fmt.Errorf("can't read users from database, error: %w", result.Error)
+	}
+	return books, nil
+}
+
 //String output data in console
 func (B Book) String() string {
 	return fmt.Sprintln(B.BookId, B.AuthorId, B.PublisherId, strings.TrimSpace(B.NameOfBook), B.YearOfPublication, B.BookVolume, B.Number)
@@ -47,13 +57,13 @@ func (B BookData) Read() ([]Result, error) {
 }
 
 //Add add data in db
-func (B BookData) Add(book Book) error {
-	result := B.db.Create(book)
+func (B BookData) Add(book Book) (int, error) {
+	result := B.db.Create(&book)
 	if result.Error != nil {
-		return fmt.Errorf(dbConst.CantAddDataError, result.Error)
+		return -1, fmt.Errorf(dbConst.CantAddDataError, result.Error)
 	}
-	return nil
-}
+	return book.BookId, nil
+
 
 //Update update number of books by the id
 func (B BookData) Update(id int, value int) error {
