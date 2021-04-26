@@ -2,21 +2,21 @@ package data
 
 import (
 	"fmt"
-	dbConst "github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
+	"gorm.io/gorm"
 	"strings"
 
-	"gorm.io/gorm"
+	dbConst "github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 )
 
 //Entity in database
 type Book struct {
-	BookId int // primary key
-	AuthorId int // foreign key
-	PublisherId int // foreign key
-	NameOfBook string // name of book
+	BookId            int    // primary key
+	AuthorId          int    // foreign key
+	PublisherId       int    // foreign key
+	NameOfBook        string // name of book
 	YearOfPublication string // year of publication of the book
-	BookVolume int // book volume
-	Number int // number of book
+	BookVolume        int    // book volume
+	Number            int    // number of book
 }
 
 //ReadAll output all data with table books
@@ -57,17 +57,17 @@ func (B BookData) Read() ([]Result, error) {
 }
 
 //Add add data in db
-func (B BookData) Add(book Book) (int, error)  {
+func (B BookData) Add(book Book) (int, error) {
 	result := B.db.Create(&book)
-	if result.Error != nil 	{
+	if result.Error != nil {
 		return -1, fmt.Errorf(dbConst.CantAddDataError, result.Error)
 	}
 	return book.BookId, nil
 }
 
-//Update update data in db
-func (B BookData) Update(colume string, id int, value interface{}) error {
-	result := B.db.Table(dbConst.Books).Where(dbConst.BookId, id).Update(colume, value)
+//Update update number of books by the id
+func (B BookData) Update(id int, value int) error {
+	result := B.db.Table(dbConst.Books).Where(dbConst.BookId, id).Update("number", value)
 	if result.Error != nil {
 		return fmt.Errorf(dbConst.CantUpdateDataError, result.Error)
 	}
