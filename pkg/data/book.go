@@ -63,7 +63,7 @@ func (B BookData) Add(book Book) (int, error) {
 		return -1, fmt.Errorf(dbConst.CantAddDataError, result.Error)
 	}
 	return book.BookId, nil
-}
+
 
 //Update update number of books by the id
 func (B BookData) Update(id int, value int) error {
