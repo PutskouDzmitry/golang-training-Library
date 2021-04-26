@@ -3,7 +3,7 @@ package data
 import (
 	"database/sql"
 	"errors"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -23,8 +23,8 @@ func NewMock() (*sql.DB, sqlmock.Sqlmock) {
 
 func NewGorm(db *sql.DB) *gorm.DB {
 	dialector := postgres.New(postgres.Config{
-		DriverName:           "postgres",
-		Conn:                 db,
+		DriverName: "postgres",
+		Conn:       db,
 	})
 	gormDb, err := gorm.Open(dialector, &gorm.Config{})
 	if err != nil {
@@ -57,14 +57,13 @@ func TestBookData_ReadAll(t *testing.T) {
 	data := NewBookData(gormDb)
 	rows := sqlmock.NewRows([]string{"book_id", "author_id", "publisher_id", "name_of_book", "year_of_publication", "book_volume", "number"}).
 		AddRow(testBook.BookId, testBook.AuthorId, testBook.PublisherId, testBook.NameOfBook, testBook.YearOfPublication, testBook.BookVolume, testBook.Number)
-	mock.ExpectQuery(constDb.SelectAllBooks).WillReturnRows(rows)
+	mock.ExpectQuery(const_db.SelectAllBooks).WillReturnRows(rows)
 	products, err := data.ReadAll()
 	assert.NoError(err)
 	assert.NotEmpty(products)
 	assert.Equal(products[0], testBook)
 	assert.Len(products, 1)
 }
-
 
 func TestBookData_Read(t *testing.T) {
 	assert := assert.New(t)
@@ -74,7 +73,7 @@ func TestBookData_Read(t *testing.T) {
 	data := NewBookData(gormDb)
 	rows := sqlmock.NewRows([]string{"book_id", "name_of_book", "name_of_publisher"}).
 		AddRow(testResult.BookId, testResult.NameOfBook, testResult.NameOfPublisher)
-	mock.ExpectQuery(constDb.SelectFromBooksWithID).WithArgs(1).WillReturnRows(rows)
+	mock.ExpectQuery(const_db.SelectFromBooksWithID).WithArgs(1).WillReturnRows(rows)
 	users, err := data.Read(1)
 	assert.NoError(err)
 	assert.NotEmpty(users)
@@ -89,7 +88,7 @@ func TestBookData_Add(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.InsertBook).WithArgs(testBook.BookId, testBook.AuthorId, testBook.PublisherId, testBook.NameOfBook, testBook.YearOfPublication, testBook.BookVolume, testBook.Number).
+	mock.ExpectExec(const_db.InsertBook).WithArgs(testBook.BookId, testBook.AuthorId, testBook.PublisherId, testBook.NameOfBook, testBook.YearOfPublication, testBook.BookVolume, testBook.Number).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 	id, err := data.Add(testBook)
@@ -104,7 +103,7 @@ func TestBookData_Update(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.Update).
+	mock.ExpectExec(const_db.Update).
 		WithArgs(testBook.NameOfBook, testBook.BookId).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
@@ -119,7 +118,7 @@ func TestBookData_Delete(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.Delete).
+	mock.ExpectExec(const_db.Delete).
 		WithArgs(testBook.BookId).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
@@ -134,7 +133,7 @@ func TestBookData_UpdateErr(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.Delete).
+	mock.ExpectExec(const_db.Delete).
 		WithArgs(testBook.BookId).
 		WillReturnError(errors.New("something went wrong..."))
 	mock.ExpectCommit()
@@ -148,7 +147,7 @@ func TestBookData_ReadAllErr(t *testing.T) {
 	defer db.Close()
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
-	mock.ExpectQuery(constDb.SelectAllBooks).WillReturnError(errors.New("something went wrong..."))
+	mock.ExpectQuery(const_db.SelectAllBooks).WillReturnError(errors.New("something went wrong..."))
 	products, err := data.ReadAll()
 	assert.Error(err)
 	assert.Empty(products)
@@ -160,7 +159,7 @@ func TestBookData_ReadErr(t *testing.T) {
 	defer db.Close()
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
-	mock.ExpectQuery(constDb.ReadBookWithJoin).WillReturnError(errors.New("something went wrong..."))
+	mock.ExpectQuery(const_db.ReadBookWithJoin).WillReturnError(errors.New("something went wrong..."))
 	products, err := data.Read(0)
 	assert.Error(err)
 	assert.Empty(products)
@@ -173,7 +172,7 @@ func TestBookData_AddErr(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.InsertBook).WithArgs(testBook.BookId, testBook.AuthorId, testBook.PublisherId, testBook.NameOfBook, testBook.YearOfPublication, testBook.BookVolume, testBook.Number).
+	mock.ExpectExec(const_db.InsertBook).WithArgs(testBook.BookId, testBook.AuthorId, testBook.PublisherId, testBook.NameOfBook, testBook.YearOfPublication, testBook.BookVolume, testBook.Number).
 		WillReturnError(errors.New("something went wrong..."))
 	mock.ExpectCommit()
 	id, err := data.Add(testBook)
@@ -188,7 +187,7 @@ func TestBookData_DeleteErr(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(constDb.Delete).
+	mock.ExpectExec(const_db.Delete).
 		WithArgs(testBook.BookId).
 		WillReturnError(errors.New("something went wrong..."))
 	mock.ExpectCommit()

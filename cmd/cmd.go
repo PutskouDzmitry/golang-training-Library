@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/PutskouDzmitry/golang-training-Library/api"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/api"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
 	"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
 	"gorilla/mux"
@@ -23,22 +23,22 @@ var (
 
 func init() {
 	if host == "" {
-		host = constDb.Host
+		host = const_db.Host
 	}
 	if port == "" {
-		port = constDb.Port
+		port = const_db.Port
 	}
 	if user == "" {
-		user = constDb.User
+		user = const_db.User
 	}
 	if dbname == "" {
-		dbname = constDb.DbName
+		dbname = const_db.DbName
 	}
 	if password == "" {
-		password = constDb.Password
+		password = const_db.Password
 	}
 	if sslmode == "" {
-		sslmode = constDb.Sslmode
+		sslmode = const_db.Sslmode
 	}
 }
 

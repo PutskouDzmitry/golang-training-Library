@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/constDb"
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -10,11 +10,11 @@ import (
 
 //GetConnection it's return a new connection in db
 func GetConnection(host, port, user, dbname, password, sslmode string) (*gorm.DB, error) {
-	dsn := fmt.Sprintf(constDb.AddInfoForConnection,
+	dsn := fmt.Sprintf(const_db.AddInfoForConnection,
 		host, port, user, dbname, password, sslmode)
-	connection, err :=  gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil{
-		return nil, fmt.Errorf(constDb.TroubleWithConnection, err)
+	connection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, fmt.Errorf(const_db.TroubleWithConnection, err)
 	}
 	return connection, nil
 }

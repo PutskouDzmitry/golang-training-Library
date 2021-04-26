@@ -2,11 +2,12 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
 	"gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
 )
 
 type bookAPI struct {
@@ -46,6 +47,8 @@ func (a bookAPI) getOneBook(writer http.ResponseWriter, request *http.Request) {
 		_, err := writer.Write([]byte("got an error when tried to get users"))
 		if err != nil {
 			log.Println(err)
+			writer.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 	}
 	err = json.NewEncoder(writer).Encode(user)
@@ -60,12 +63,12 @@ func (a bookAPI) createBook(writer http.ResponseWriter, request *http.Request) {
 	book := new(data.Book)
 	err := json.NewDecoder(request.Body).Decode(&book)
 	if err != nil {
-		log.Printf("failed reading JSON: %s\n", err)
+		log.Printf("failed reading JSON: %s", err)
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	if book == nil {
-		log.Printf("failed empty JSON\n")
+		log.Printf("failed empty JSON")
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
