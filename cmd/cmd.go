@@ -69,11 +69,6 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(books)
-	changeNumber := 123
-	err = bookDate.Update(2, changeNumber)
-	if err != nil {
-		log.Fatal(err)
-	}
 	books, err = bookDate.Read()
 	if err != nil {
 		log.Fatal(err)

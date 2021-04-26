@@ -81,4 +81,3 @@ func (B BookData) Delete(id int) error {
 		return fmt.Errorf(dbConst.CantDeleteDataError, result.Error)
 	}
 	return nil
-}

@@ -103,6 +103,7 @@ func TestBookData_Update(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
+  data.Update("name_of_book", testBook.BookId, testBook.NameOfBook)
 	mock.ExpectExec(const_db.Update).
 		WithArgs(testBook.NameOfBook, testBook.BookId).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -187,10 +188,9 @@ func TestBookData_DeleteErr(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectBegin()
-	mock.ExpectExec(const_db.Delete).
 		WithArgs(testBook.BookId).
 		WillReturnError(errors.New("something went wrong..."))
 	mock.ExpectCommit()
 	err := data.Delete(testBook.BookId)
 	assert.Error(err)
-}
+
