@@ -45,39 +45,20 @@ func main() {
 	if err != nil {
 		log.Fatalf("can't connect to database, error: %v", err)
 	}
-	bookDate := data.NewBookData(conn)
-	books, err := bookDate.Read()
+	// 2. create router that allows to set routes
+	r := mux.NewRouter()
+	// 3. connect to data layer
+	userData := data.NewBookData(conn)
+	// 4. send data layer to api layer
+	api.ServeUserResource(r, *userData)
+	// 5. cors for making requests from any domain
+	r.Use(mux.CORSMethodMiddleware(r))
+	// 6. start server
+	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Server Listen port...", err)
 	}
-	fmt.Println(books)
-	newBook := data.Book{
-		BookId:            122,
-		AuthorId:          4,
-		PublisherId:       2,
-		NameOfBook:        "Lord of the Rings",
-		YearOfPublication: "2017-12-5",
-		BookVolume:        50,
-		Number:            10,
+	if err := http.Serve(listener, r); err != nil {
+		log.Fatal("Server has been crashed...")
 	}
-	err = bookDate.Add(newBook)
-	if err != nil {
-		log.Fatal(err)
-	}
-	books, err = bookDate.Read()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(books)
-	books, err = bookDate.Read()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(books)
-	err = bookDate.Delete(11)
-	books, err = bookDate.Read()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(books)
 }

@@ -45,10 +45,10 @@ func NewBookData(db *gorm.DB) *BookData {
 }
 
 //Read read data in db
-func (B BookData) Read() ([]Result, error) {
+func (B BookData) Read(id int) ([]Result, error) {
 	var results []Result
 	result := B.db.Table(dbConst.Publishers).Select(dbConst.SelectBookAndPublisher).
-		Joins(dbConst.ReadBookWithJoin).
+		Joins(dbConst.ReadBookWithJoin).Where("book_id", id).
 		Find(&results)
 	if result.Error != nil {
 		return nil, result.Error
@@ -63,6 +63,7 @@ func (B BookData) Add(book Book) (int, error) {
 		return -1, fmt.Errorf(dbConst.CantAddDataError, result.Error)
 	}
 	return book.BookId, nil
+}
 
 
 //Update update number of books by the id
@@ -81,3 +82,4 @@ func (B BookData) Delete(id int) error {
 		return fmt.Errorf(dbConst.CantDeleteDataError, result.Error)
 	}
 	return nil
+}

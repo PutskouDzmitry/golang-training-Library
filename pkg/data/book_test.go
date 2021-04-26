@@ -193,4 +193,4 @@ func TestBookData_DeleteErr(t *testing.T) {
 	mock.ExpectCommit()
 	err := data.Delete(testBook.BookId)
 	assert.Error(err)
-
+}

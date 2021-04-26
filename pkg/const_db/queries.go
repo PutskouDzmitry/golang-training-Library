@@ -10,4 +10,5 @@ const (
 	SelectAllBooks         = `SELECT * FROM "books"`
 	Update                 = `UPDATE "books" SET "name_of_book"=$1 WHERE book_id = $2`
 	Delete                 = `DELETE FROM "books" WHERE book_id = $1`
+	SelectFromBooksWithID  = `SELECT books.book_id, books.name_of_book ,publishers.name_of_publisher FROM "publishers" RIGHT JOIN books on books.publisher_id=publishers.publisher_id WHERE "book_id" = $1`
 )

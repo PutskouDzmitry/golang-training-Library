@@ -2,12 +2,13 @@ package const_db
 
 const (
 	//Const for default for initialize connection
-	Host     = "localhost"
-	Port     = "5432"
-	User     = "postgres"
-	DbName   = "postgres"
-	Password = "1234"
-	Sslmode  = "disable"
+	ServerPort = "8080"
+	Host       = "localhost"
+	Port       = "5432"
+	User       = "postgres"
+	DbName     = "postgres"
+	Password   = "1234"
+	Sslmode    = "disable"
 	//Tables const
 	Publishers = "publishers"
 	Books      = "books"
