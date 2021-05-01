@@ -65,22 +65,6 @@ func TestBookData_ReadAll(t *testing.T) {
 	assert.Len(products, 1)
 }
 
-func TestBookData_Read(t *testing.T) {
-	assert := assert.New(t)
-	db, mock := NewMock()
-	defer db.Close()
-	gormDb := NewGorm(db)
-	data := NewBookData(gormDb)
-	rows := sqlmock.NewRows([]string{"book_id", "name_of_book", "name_of_publisher"}).
-		AddRow(testResult.BookId, testResult.NameOfBook, testResult.NameOfPublisher)
-	mock.ExpectQuery(const_db.Read).WillReturnRows(rows)
-	users, err := data.Read()
-	assert.NoError(err)
-	assert.NotEmpty(users)
-	assert.Equal(users[0], testResult)
-	assert.Len(users, 1)
-}
-
 func TestBookData_Add(t *testing.T) {
 	assert := assert.New(t)
 	db, mock := NewMock()
@@ -94,22 +78,6 @@ func TestBookData_Add(t *testing.T) {
 	id, err := data.Add(testBook)
 	assert.NoError(err)
 	assert.Equal(id, testBook.BookId)
-}
-
-func TestBookData_Update(t *testing.T) {
-	assert := assert.New(t)
-	db, mock := NewMock()
-	defer db.Close()
-	gormDb := NewGorm(db)
-	data := NewBookData(gormDb)
-	mock.ExpectBegin()
-  data.Update("name_of_book", testBook.BookId, testBook.NameOfBook)
-	mock.ExpectExec(const_db.Update).
-		WithArgs(testBook.NameOfBook, testBook.BookId).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectCommit()
-	err := data.Update(testBook.BookId, testBook.Number)
-	assert.NoError(err)
 }
 
 func TestBookData_Delete(t *testing.T) {
@@ -161,7 +129,7 @@ func TestBookData_ReadErr(t *testing.T) {
 	gormDb := NewGorm(db)
 	data := NewBookData(gormDb)
 	mock.ExpectQuery(const_db.ReadBookWithJoin).WillReturnError(errors.New("something went wrong..."))
-	products, err := data.Read()
+	products, err := data.Read(testResult.BookId)
 	assert.Error(err)
 	assert.Empty(products)
 }
@@ -179,18 +147,4 @@ func TestBookData_AddErr(t *testing.T) {
 	id, err := data.Add(testBook)
 	assert.Error(err)
 	assert.Equal(id, -1)
-}
-
-func TestBookData_DeleteErr(t *testing.T) {
-	assert := assert.New(t)
-	db, mock := NewMock()
-	defer db.Close()
-	gormDb := NewGorm(db)
-	data := NewBookData(gormDb)
-	mock.ExpectBegin()
-		WithArgs(testBook.BookId).
-		WillReturnError(errors.New("something went wrong..."))
-	mock.ExpectCommit()
-	err := data.Delete(testBook.BookId)
-	assert.Error(err)
 }

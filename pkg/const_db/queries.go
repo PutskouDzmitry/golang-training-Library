@@ -2,7 +2,7 @@ package const_db
 
 //Const for queries
 const (
-	Read                   = `SELECT books.book_id, books.name_of_book ,publishers.name_of_publisher FROM "publishers" RIGHT JOIN books on books.publisher_id=publishers.publisher_id`
+	Read                   = `SELECT books.book_id, books.name_of_book ,publishers.name_of_publisher FROM "publishers" RIGHT JOIN books on books.publisher_id=publishers.publisher_id WHERE "book_id" = $1`
 	ReadBookWithJoin       = "RIGHT JOIN books on books.publisher_id=publishers.publisher_id"
 	SelectBookAndPublisher = "books.book_id, books.name_of_book ,publishers.name_of_publisher"
 	BookId                 = "book_id = ?"
