@@ -89,8 +89,14 @@ func (a bookAPI) updateBook(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	number := idRequest["number"]
-	err = a.data.Update("number", id, number)
+	strNumber := idRequest["number"]
+	number, err := strconv.Atoi(strNumber)
+	if err != nil {
+		log.Println("book hasn't been updated, because number doesn't equal int:", number)
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = a.data.Update(id, number)
 	if err != nil {
 		log.Println("book hasn't been updated")
 		writer.WriteHeader(http.StatusBadRequest)
