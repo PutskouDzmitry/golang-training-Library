@@ -1,57 +1,43 @@
 package main
 
 import (
-	"gorilla/mux"
+	"context"
+	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"net"
 	"net/http"
-	"os"
+	"time"
 
 	"github.com/PutskouDzmitry/golang-training-Library/pkg/api"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/const_db"
 	"github.com/PutskouDzmitry/golang-training-Library/pkg/data"
-	"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
-)
+	//"github.com/PutskouDzmitry/golang-training-Library/pkg/db"
 
-var (
-	host     = os.Getenv("DB_USERS_HOST")
-	port     = os.Getenv("DB_USERS_PORT")
-	user     = os.Getenv("DB_USERS_USER")
-	dbname   = os.Getenv("DB_USERS_DBNAME")
-	password = os.Getenv("DB_USERS_PASSWORD")
-	sslmode  = os.Getenv("DB_USERS_SSL")
+	"github.com/gorilla/mux"
 )
-
-func init() {
-	if host == "" {
-		host = const_db.Host
-	}
-	if port == "" {
-		port = const_db.Port
-	}
-	if user == "" {
-		user = const_db.User
-	}
-	if dbname == "" {
-		dbname = const_db.DbName
-	}
-	if password == "" {
-		password = const_db.Password
-	}
-	if sslmode == "" {
-		sslmode = const_db.Sslmode
-	}
-}
 
 func main() {
-	conn, err := db.GetConnection(host, port, user, dbname, password, sslmode)
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://kvarc:pilubadima@clusterkvarc.bdz6v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"))
 	if err != nil {
-		log.Fatalf("can't connect to database, error: %v", err)
+		logrus.Fatal(err)
 	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer client.Disconnect(ctx)
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	db := client.Database("myFirstDatabase")
+	collection := db.Collection("book")
+	userData := data.NewBookData(collection)
 	// 2. create router that allows to set routes
 	r := mux.NewRouter()
-	// 3. connect to data layer
-	userData := data.NewBookData(conn)
 	// 4. send data layer to api layer
 	api.ServeUserResource(r, *userData)
 	// 5. cors for making requests from any domain
@@ -65,3 +51,33 @@ func main() {
 		log.Fatal("Server has been crashed...")
 	}
 }
+
+//
+//client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://kvarc:pilubadima@clusterkvarc.bdz6v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"))
+//if err != nil {
+//logrus.Fatal("1",err)
+//}
+//ctx, _ := context.WithTimeout(context.Background(), 10 * time.Second)
+//err = client.Connect(ctx)
+//if err != nil {
+//logrus.Fatal("2",err)
+//}
+//defer client.Disconnect(ctx)
+//err = client.Ping(ctx, readpref.Primary())
+//if err != nil {
+//logrus.Fatal("3",err)
+//}
+//if err != nil {
+//logrus.Fatal("4",err)
+//}
+//db := client.Database("myFirstDatabase")
+//col := db.Collection("books")
+//cursor, err := col.Find(ctx, bson.M{})
+//if err != nil {
+//logrus.Fatal("5",err)
+//}
+//var episodes []bson.M
+//if err = cursor.All(ctx, &episodes); err != nil {
+//logrus.Fatal("6",err)
+//}
+//fmt.Println(episodes)
